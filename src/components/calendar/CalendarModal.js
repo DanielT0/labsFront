@@ -7,7 +7,8 @@ import { uiCloseModal } from '../../actions/ui';
 import { eventClearActiveEvent, eventStartAddNew, eventStartUpdate } from '../../actions/events';
 import Swal from 'sweetalert2';
 import { usersStartLoading } from '../../actions/users';
-import { elementsStartLoading } from '../../actions/elements';
+import { elementosStartLoading } from '../../actions/elements';
+import { Grid } from '@mui/material';
 
 const customStyles = {
     content: {
@@ -28,8 +29,9 @@ const initEvent = {
     start: moment().toDate(),
     end: moment().add(2, 'hours').toDate(),
     cantidad: '',
-    idUsuario: '',
+    usuarioId: '',
     idElemento: '',
+    elementos: [],
     observaciones: '',
     fechaPrestamo: moment().toDate(),
     fechaDevolucion: moment().add(2, 'hours').toDate(),
@@ -49,16 +51,17 @@ export const CalendarModal = () => {
     const { activeEvent } = useSelector(state => state.calendar);
     const dispatch = useDispatch();
     const [formValues, setFormValues] = useState(initEvent);
-    const { observaciones, cantidad, idUsuario, idElemento, fechaPrestamo, fechaDevolucion } = formValues
+    const { observaciones, cantidad, usuarioId, idElemento, fechaPrestamo, fechaDevolucion } = formValues
+    const elementosPrestamo = formValues.elementos;
     const [cantidadValida, setCantidadValida] = useState(true)
     const { users } = useSelector(state => state.user);
-    const { elements } = useSelector(state => state.element);
+    const { elementos } = useSelector(state => state.elemento);
 
     const [isOpen, setisOpen] = useState(true);
 
     useEffect(() => {
         dispatch(usersStartLoading())
-        dispatch(elementsStartLoading())
+        dispatch(elementosStartLoading())
         if (activeEvent) {
             setFormValues(activeEvent);
             setdateStart(fechaPrestamo)
@@ -87,12 +90,7 @@ export const CalendarModal = () => {
             return;
         }
 
-        if (!cantidad) {
-            setCantidadValida(false);
-            return
-        }
-
-        if(idUsuario.trim().length<1 || idElemento.trim().length<1){
+        if (!usuarioId) {
             Swal.fire("Error", "Debe seleccionar un usuario y un elemento", "error")
             return;
         }
@@ -105,6 +103,20 @@ export const CalendarModal = () => {
 
         setCantidadValida(true);
         closeModal();
+    }
+
+    const handleAddElemento = (e) => {
+        if (idElemento) {
+            if (elementosPrestamo.includes(idElemento)) {
+                Swal.fire("Error", "El elemento ya se agregó a la lista de elementos a prestar ", "error")
+            }
+            else {
+                elementosPrestamo.push(idElemento);
+                Swal.fire('¡Listo!',
+                'Elemento agregado',
+                'success')
+            }
+        }
     }
 
     const closeModal = () => {
@@ -148,15 +160,23 @@ export const CalendarModal = () => {
             >
                 <div className="form-group">
                     <label>Usuario</label>
-                    <select name="idUsuario" id="idUsuario" className="form-control" value={idUsuario} onChange={handleInputChange}>
-                    <option value="">-Seleccionar usuario-</option>
-                        {users.map((user) => <option value={user._id}>{user.name}</option>)}
+                    <select name="usuarioId" id="usuarioId" className="form-control" value={usuarioId} onChange={handleInputChange}>
+                        <option value="">-Seleccionar usuario-</option>
+                        {users.map((user) => <option value={user.id}>{user.nombre}</option>)}
                     </select>
                     <label>Elemento</label>
                     <select name="idElemento" id="idElemento" className="form-control" value={idElemento} onChange={handleInputChange}>
                         <option value="">-Seleccionar elemento--</option>
-                        {elements.map((elemento) => <option value={elemento._id}>{elemento.nombre}</option>)}
+                        {elementos.map((elemento) => <option value={elemento.id}>{elemento.nombre}</option>)}
                     </select>
+                    <button
+                        onClick={handleAddElemento}
+                        className="btn btn-outline-primary btn-block"
+                        type="button"
+                    >
+                        <i className="far fa-save"></i>
+                        <span> Añadir elemento</span>
+                    </button>
                 </div>
                 <div className="form-group">
                     <label>Fecha y hora del préstamo</label>
@@ -174,19 +194,6 @@ export const CalendarModal = () => {
                         value={fechaDevolucion}
                         className="form-control"
                     />
-                </div>
-                <div className="form-group">
-                    <label>Cantidad</label>
-                    <input
-                        type="number"
-                        className={`form-control ${!cantidadValida && 'is-invalid'}`}
-                        placeholder="Cantidad"
-                        name="cantidad"
-                        value={cantidad}
-                        autoComplete="off"
-                        onChange={handleInputChange}
-                    />
-                    <small id="emailHelp" className="form-text text-muted">Observaciones</small>
                 </div>
 
                 <div className="form-group">

@@ -1,72 +1,68 @@
 import { types } from '../types/types';
 
 const initialState = {
-    elementos: [
+    proyectos: [
         {
             id: '',
-            referencia: '',
             nombre: '',
             descripcion: '',
-            estado: '',
-            observaciones: '',
-            proyectoId: '',
-            categoriumId: '',
-            grupoId: '',
+            laboratorioId: '',
         }
     ],
-    activeElemento: null,
-
+    proyectoId: '',
+    activeProy: null,
+    
 };
 
-export const elementosReducer = (state = initialState, action) => {
+export const proyectosReducer = (state = initialState, action) => {
 
     switch (action.type) {
 
-        case types.elementosLoaded:
+        case types.proyectosLoaded:
             return {
                 ...state,
-                elementos: [...action.payload]
+                proyectos: [...action.payload]
             }
-            
-        case types.elementoAddNew:
+        case types.proyectoAddNew:
             console.log(action.payload.id);
             return {
                 ...state,
-                elementos: [
-                    ...state.elementos,
+                proyectos: [
+                    ...state.proyectos,
                     action.payload
                 ]
             }
 
-        case types.elementoSetActive:
+        case types.proyectoSetActive:
             return {
                 ...state,
-                activeElemento: action.payload,
-                elementoId: action.payload.id
+                activeProy: action.payload,
+                proyectoId: action.payload.id
             }
-
-        case types.elementoClearActiveElemento:
+        
+        case types.proyectoClearActiveProy:
             return {
                 ...state,
-                activeElemento: null
+                activeProy: null
             }
 
-        case types.elementoUpdated:
+        case types.proyectoUpdated:
             console.log(action.payload.id);
             return {
                 ...state,
-                proyectos: state.elementos.map(
+                proyectos: state.proyectos.map(
                     e => (e.id === action.payload.id) ? action.payload : e
                 )
             }
 
-        case types.elementoDeleted:
+        case types.proyectoDeleted:
             return {
                 ...state,
-                elementos: state.elementos.filter(
+                proyectos: state.proyectos.filter(
                     e => (e.id !== action.id)
                 ),
-                activeElemento: null
+                proyectoId:null,
+                activeProy: null
             }
 
         default:

@@ -3,14 +3,23 @@ import { types } from '../types/types';
 const initialState = {
     labs: [
         {
-            _id: '',
+            id: '',
             nombre: '',
             descripcion: '',
+            tipo: '',
+        }
+    ],
+    labsFiltrados: [
+        {
+            id: '',
+            nombre: '',
+            descripcion: '',
+            tipo: '',
         }
     ],
     labId: '',
     activeLab: null,
-    
+
 };
 
 export const labsReducer = (state = initialState, action) => {
@@ -21,6 +30,11 @@ export const labsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 labs: [...action.payload]
+            }
+        case types.labsFiltradosUpdate:
+            return {
+                ...state,
+                labsFiltrados: [...action.payload]
             }
         case types.labAddNew:
             return {
@@ -35,9 +49,9 @@ export const labsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 activeLab: action.payload,
-                labId: action.payload._id
+                labId: action.payload.id
             }
-        
+
         case types.labClearActiveLab:
             return {
                 ...state,
@@ -48,7 +62,7 @@ export const labsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 labs: state.labs.map(
-                    e => (e._id === action.payload._id) ? action.payload : e
+                    e => (e.id === action.payload.id) ? action.payload : e
                 )
             }
 
@@ -56,9 +70,9 @@ export const labsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 labs: state.labs.filter(
-                    e => (e._id !== action.id)
+                    e => (e.id !== action.id)
                 ),
-                labId:null,
+                labId: null,
                 activeLab: null
             }
 

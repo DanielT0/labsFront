@@ -10,8 +10,10 @@ import {
 } from "reactstrap";
 import Swal from "sweetalert2";
 import validator from "validator";
-import { labClearActiveLab, labSetActive, labStartAddNew, labStartUpdate } from "../../actions/labs";
+// import { labClearActiveLab, labSetActive, labStartAddNew, labStartUpdate } from "../../actions/labs";
+import { proyectoStartUpdate, proyClearActiveProy, proyectoStartAddNew } from "../../actions/proyectos";
 import { uiCloseModal } from "../../actions/ui";
+
 
 const customStyles = {
     content: {
@@ -24,22 +26,25 @@ const customStyles = {
     }
 };
 
-const initLab = {
+const initProy = {
     nombre: '',
     descripcion: '',
+    laboratorioId: '',
 }
 
 // Modal
 
-export const LabModal = () => {
+export const ProyectoModal = () => {
     const dispatch = useDispatch()
     const { modalOpen } = useSelector(state => state.ui);
-    const [formValues, setFormValues] = useState(initLab)
-    const { nombre, descripcion } = formValues
-    const { activeLab, labId } = useSelector(state => state.lab);
+    const [formValues, setFormValues] = useState(initProy);
+    const { nombre, descripcion, laboratorioId } = formValues;
+    const { activeProy, labId } = useSelector(state => state.proyecto);
+    const { labs } = useSelector(state => state.lab);
 
     const [nombreValido, setNombreValido] = useState(true)
     const [descripcionValida, setDescripcionValida] = useState(true)
+
 
     const handleInputChange = ({ target }) => {
         setFormValues({
@@ -51,16 +56,20 @@ export const LabModal = () => {
 
     const closeModal = () => {
         // TODO: cerrar el modal
-        dispatch(labClearActiveLab())
+        dispatch(proyClearActiveProy())
         dispatch(uiCloseModal());
     }
 
+    useEffect(()=>{
+
+    },[])
+
     useEffect(() => {
-        if (activeLab) {
-            setFormValues(activeLab);
+        if (activeProy) {
+            setFormValues(activeProy);
         }
-        else{
-            setFormValues(initLab);
+        else {
+            setFormValues(initProy);
         }
     }, [modalOpen])
 
@@ -79,10 +88,15 @@ export const LabModal = () => {
             setNombreValido(true);
             return;
         }
-        if (activeLab) {
-            dispatch(labStartUpdate(formValues))
+        console.log(laboratorioId);
+        // if (laboratorioId.trim().length < 1) {
+        //     Swal.fire("Error", "Debe seleccionar un laboratorio", "error")
+        //     return;
+        // }
+        if (activeProy) {
+            dispatch(proyectoStartUpdate(formValues))
         } else {
-            dispatch(labStartAddNew(formValues))
+            dispatch(proyectoStartAddNew(formValues))
         }
         setDescripcionValida(true);
         setNombreValido(true)
@@ -99,7 +113,7 @@ export const LabModal = () => {
         >
 
             <ModalHeader>
-                <div><h3>{(activeLab) ? 'Editar laboratorio' : 'Nuevo laboratorio'} </h3></div>
+                <div><h3>{(activeProy) ? 'Editar proyecto' : 'Nuevo proyecto'} </h3></div>
             </ModalHeader>
 
             <ModalBody>
@@ -130,6 +144,11 @@ export const LabModal = () => {
                         onChange={handleInputChange}
                     />
                 </FormGroup>
+                <label>Laboratorio</label>
+                <select name="laboratorioId" id="laboratorioId" className="form-control" value={laboratorioId} onChange={handleInputChange}>
+                    <option value="">-Seleccionar laboratorio-</option>
+                    {labs.map((lab) => <option value={lab.id}>{lab.nombre}</option>)}
+                </select>
             </ModalBody>
 
             <ModalFooter>

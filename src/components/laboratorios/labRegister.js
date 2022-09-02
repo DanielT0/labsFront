@@ -1,32 +1,26 @@
 import { Navbar } from "../ui/Navbar"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import {
-  Table,
-  Button,
-  Container,
+    Table,
+    Button,
+    Container,
 } from "reactstrap";
 import { LabModal } from "./labsModal";
+import { CardAct } from './Card';
 import { useDispatch, useSelector } from "react-redux";
 import { uiOpenModal } from "../../actions/ui";
-import { CardAct } from "../ui/Card";
-import { labClearActiveLab, labSetActive, labsStartLoading, labStartDelete } from "../../actions/labs";
+import { labClearActiveLab, labSetActive, labsStartLoading, labStartDelete, updateLabsFiltrados } from "../../actions/labs";
 import { Grid } from "@material-ui/core";
 
-const data = [
-  { id: 1, personaje: "Naruto", anime: "Naruto" },
-  { id: 2, personaje: "Goku", anime: "Dragon Ball" },
-  { id: 3, personaje: "Kenshin Himura", anime: "Rurouni Kenshin" },
-  { id: 4, personaje: "Monkey D. Luffy", anime: "One Piece" },
-  { id: 5, personaje: "Edward Elric", anime: "Fullmetal Alchemist: Brotherhood"},
-  { id: 6, personaje: "Seto Kaiba", anime: "Yu-Gi-Oh!" },
-];
+const initFilter = {
+    tipo: '',
+}
 
 export const LabRegister = () => {
     const state = {
-        data: data,
         modalActualizar: false,
         modalInsertar: false,
         form: {
@@ -36,7 +30,19 @@ export const LabRegister = () => {
         },
     };
 
-    const { labs } = useSelector(state => state.lab);
+    const { labs, labsFiltrados } = useSelector(state => state.lab);
+    const [formValues, setFormValues] = useState(initFilter);
+    var labsF = labs;
+
+    const handleInputChange = ({ target }) => {
+        // if (target.name == "tipo") {
+            // labsF = labs.filter((lab) => { if (target.value=="") { if(target.value){lab.tipo.includes(target.value) } } else{}});
+        // }
+        // else if (target.name == "nombre") {
+            labsF = labs.filter((lab) => lab.nombre.includes(target.value))
+        // }
+        dispatch(updateLabsFiltrados(labsF));
+    }
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -59,7 +65,7 @@ export const LabRegister = () => {
         dispatch(labClearActiveLab())
     };
 
-    const mostrarModalActualizar = (e) =>{
+    const mostrarModalActualizar = (e) => {
         dispatch(uiOpenModal())
         dispatch(labSetActive(e))
     }
@@ -69,7 +75,7 @@ export const LabRegister = () => {
     };
 
     const handleDelete = (lab) => {
-        dispatch( labStartDelete(lab) );
+        dispatch(labStartDelete(lab));
     }
 
     // const editar = (dato) => {
@@ -118,117 +124,36 @@ export const LabRegister = () => {
     // };
     return (
         <div class="Div">
-            {<Navbar />
-            /*
-            <form class="form">
-                <br></br><label style={{ color: 'white', fontSize: '30px', text_shadow: '2px 2px 5px black' }}>Registro de Laboratorio</label>
-                <input type="id" class="inputT" />
-                <br></br>
-                <label class="labels">Nombre</label>
-                <input type="nombre" class="inputT" />
-                <br></br>
-                <label class="labels">Descripcion</label>
-                <input type="password" class="inputT" />
-                <br></br>
-                <br></br>
-            </form>
-            <div style={{ float: 'left', width: '15%', height: '15%' }}> </div>
+            {
+                <Navbar />}
+            <div class="contenedor__central">
+                <div class="upper__section__container">
+                    <div class="section__title">
+                        Laboratorios
+                    </div>
+                    <button class="button__crear"
+                        onClick={mostrarModalInsertar}
+                    >Crear</button>
+                    <div class="upper-right">
+                        <input type="text" class="search-bar" placeholder="Buscar" name="nombre" onChange={handleInputChange} />
+                        <a><i class="uil uil-filter button__icon"></i></a>
+                        <select name="tipo" id="tipo" class="filterTipo" onClick={handleInputChange}>
+                            <option value="">Tipo</option>
+                            <option value="Investigacion">Investigación</option>
+                            <option value="Docencia">Docencia</option>
+                        </select>
+                    </div>
 
-            <button type="submit" class="boton" style={{ float: 'left' }}>Atras</button>
-            <div style={{ float: 'right', width: '15%', height: '1%' }}> </div>
-            <button type="submit" class="boton" style={{ float: 'right' }}>Enviar</button>
-            <div class="container"></div>
-            <div class="mx-auto col-sm-8 main-section" id="myTab" role="tablist"></div>
-            <ul class="nav nav-tabs justify-content-end"></ul>
-            <li class="nav-item"></li>
-            <a class="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
-
-            <li class="nav-item"></li>
-            <a class="nav-link" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>
-
-
-            <div class="tab-content" id="myTabContent"></div>
-            <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab"></div>
-
-            <div class="tab-pane fade" id="form" role="tabpanel" aria-labelledby="form-tab"></div> */}
-            <Container>
-                <Button color="success"
-                 onClick={mostrarModalInsertar}
-                 >Crear</Button>
-                <br />
-                <br />
-                <Grid container>
-                    {labs.map(dato=>(
-                        <Grid item xs={6}>
-                            <CardAct 
-                            key={dato._id}
-                            dato = {dato}/>
-                        </Grid>
+                </div>
+                <div class="contenedor__laboratorios">
+                    {labsFiltrados.map(dato => (
+                        <CardAct
+                            key={dato.id}
+                            dato={dato} />
                     ))}
-                </Grid>
-                {/*<Table>
-                    <thead>
-                        <tr>
-                        <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {labs.map((dato) => (
-                            <tr key={dato._id}>
-                                <td>{dato._id}</td>
-                                <td>{dato.nombre}</td>
-                                <td>{dato.descripcion}</td>
-                                <td>
-                                    <Button
-                                        color="primary"
-                                        onClick={() => mostrarModalActualizar(dato)}
-                                    >
-                                        Editar
-                    </Button>{" "}
-                                    <Button color="danger" 
-                                        onClick={() => handleDelete(dato)}
-                                    >Eliminar</Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-                        */}
-            </Container>
-
-            
-            <LabModal/>
-
+                </div>
+            </div>
+            <LabModal />
         </div>
-
-        //         <div class="Div">
-
-        //             <form class="form">
-        //                 <br><br> <label style="color: white; font-size: 30px; text-shadow: 2px 2px 5px black;">Registro de Laboratorio</label>
-        //                     <br><br>
-        //                         <label class="labels">Id de Laboratorio</label>
-        //                         <input type="id" class="inputT" />
-        //                         <br><br>
-        //                             <label class="labels">Nombre</label>
-        //                             <input type="nombre" class="inputT" />
-        //                             <br><br>
-        //                                 <label class="labels">Descripcion</label>
-        //                                 <input type="password" class="inputT" />
-        //                                 <br><br>
-
-        //                                     <br><br>
-        //   </form>
-        //                                         <div style="float:left; width:15%; height:1%;"> </div>
-
-        //                                         <button type="submit" class="boton" style=" float:left;">Atras</button>
-        //                                         <div style="float:right; width:15%; height:1%;
-        // "> </div>
-        //                                         <button type="submit" class="boton" style=" float:right;">Enviar</button>
-
-        // </div>
     )
 }

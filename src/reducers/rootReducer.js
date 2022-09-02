@@ -5,7 +5,10 @@ import { calendarReducer } from './calendarReducer';
 import { authReducer } from './authReducer';
 import { labsReducer } from './labReducer';
 import { usersReducer } from './usersReducer';
-import { elementsReducer } from './elementReducer';
+import { elementosReducer } from './elementReducer';
+import { proyectosReducer } from './proyectoReducer';
+import { categoriasReducer } from './categoriaReducer';
+import { gruposEReducer } from './grupoEReducer';
 
 
 
@@ -15,6 +18,9 @@ export const rootReducer = combineReducers({
     auth: authReducer,
     lab: labsReducer,
     user: usersReducer,
-    element: elementsReducer
+    elemento: elementosReducer,
+    proyecto: proyectosReducer,
+    categoria: categoriasReducer,
+    grupoE: gruposEReducer,
 })
 

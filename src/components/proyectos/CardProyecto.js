@@ -1,10 +1,11 @@
 import * as React from 'react';
+import Swal from "sweetalert2"
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { labClearActiveLab, labSetActive, labsStartLoading, labStartDelete } from "../../actions/labs";
+import { proySetActive, proyStartDelete } from "../../actions/proyectos";
 import { useDispatch, useSelector } from "react-redux";
 import { uiOpenModal } from "../../actions/ui";
 import {
@@ -35,7 +36,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export const CardAct = ({ dato }) => {
+export const CardProy = ({ dato }) => {
     console.log(dato);
     const bull = (
         <Box
@@ -48,20 +49,32 @@ export const CardAct = ({ dato }) => {
 
     const dispatch = useDispatch()
 
-    const handleDelete = (lab) => {
-        dispatch(labStartDelete(lab));
+    const handleDelete = (proy) => {
+        Swal.fire({
+            title: '¿Seguro que quieres eliminiar este proyecto?',
+            text: "La información eliminada no podrá ser recuperada",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                dispatch(proyStartDelete(proy));
+            }
+          })
     }
 
     const mostrarModalActualizar = (e) =>{
         dispatch(uiOpenModal())
-        dispatch(labSetActive(e))
+        dispatch(proySetActive(e))
     }
 
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    Word of the Day
+                    Proyecto
                 </Typography>
                 <Typography variant="h5" component="div">
                     {dato.nombre}

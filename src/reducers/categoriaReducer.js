@@ -1,72 +1,67 @@
 import { types } from '../types/types';
 
 const initialState = {
-    elementos: [
+    categorias: [
         {
             id: '',
-            referencia: '',
             nombre: '',
             descripcion: '',
-            estado: '',
-            observaciones: '',
-            proyectoId: '',
-            categoriumId: '',
-            grupoId: '',
         }
     ],
-    activeElemento: null,
-
+    categoriaId: '',
+    activeCategoria: null,
+    
 };
 
-export const elementosReducer = (state = initialState, action) => {
+export const categoriasReducer = (state = initialState, action) => {
 
     switch (action.type) {
 
-        case types.elementosLoaded:
+        case types.categoriasLoaded:
             return {
                 ...state,
-                elementos: [...action.payload]
+                categorias: [...action.payload]
             }
-            
-        case types.elementoAddNew:
+        case types.categoriaAddNew:
             console.log(action.payload.id);
             return {
                 ...state,
-                elementos: [
-                    ...state.elementos,
+                categorias: [
+                    ...state.categorias,
                     action.payload
                 ]
             }
 
-        case types.elementoSetActive:
+        case types.categoriaSetActive:
             return {
                 ...state,
-                activeElemento: action.payload,
-                elementoId: action.payload.id
+                activeCategoria: action.payload,
+                categoriaId: action.payload.id
             }
-
-        case types.elementoClearActiveElemento:
+        
+        case types.categoriaClearActiveCategoria:
             return {
                 ...state,
-                activeElemento: null
+                activeCategoria: null
             }
 
-        case types.elementoUpdated:
+        case types.categoriaUpdated:
             console.log(action.payload.id);
             return {
                 ...state,
-                proyectos: state.elementos.map(
+                proyectos: state.categorias.map(
                     e => (e.id === action.payload.id) ? action.payload : e
                 )
             }
 
-        case types.elementoDeleted:
+        case types.categoriaDeleted:
             return {
                 ...state,
-                elementos: state.elementos.filter(
+                categorias: state.categorias.filter(
                     e => (e.id !== action.id)
                 ),
-                activeElemento: null
+                categoriaId:null,
+                activeCategoria: null
             }
 
         default:

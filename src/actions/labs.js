@@ -1,3 +1,4 @@
+import axios from "axios"
 import Swal from "sweetalert2"
 import { fetchConToken } from "../helpers/fetch"
 import { types } from "../types/types"
@@ -5,7 +6,7 @@ import { types } from "../types/types"
 export const labsStartLoading = () =>{
     return async(dispatch)=>{
         try {
-            const resp = await fetchConToken('labs')
+            const resp = await fetchConToken('laboratorios')
             const body = await resp.json()
 
             const labs = body.laboratorios
@@ -18,19 +19,38 @@ export const labsStartLoading = () =>{
     }
 }
 
+export const updateLabsFiltrados = ( labs ) =>{
+    return async(dispatch)=>{
+        try {
+            console.log(labs)
+            dispatch(labFiltered(labs))
+            // console.log(prests)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
+const labFiltered = (labs) =>({
+    type: types.labsFiltradosUpdate, 
+    payload: labs
+})
+
 
 export const labStartAddNew = ( lab )=>{
     return async(dispatch) =>{
         try {
-            const resp = await fetchConToken('labs', lab, 'POST');
+            const resp = await fetchConToken('laboratorios', lab, 'POST');
             const body= await resp.json();
             console.log(body)
             if(body.ok){
-                lab._id = body.laboratorio._id
-                lab.nombre= body.laboratorio.nombre
-                lab.descripcion=body.laboratorio.descripcion
+                lab.id=body.id
+                lab.nombre= body.nombre
+                lab.descripcion=body.descripcion
                 dispatch(labAddNew(lab))
-                console.log(lab)
+                Swal.fire('¡Listo!',
+                'Laboratorio agregado',
+                'success')
             }
             else{
                 Swal.fire('Error',body.msg, 'error')
@@ -64,12 +84,14 @@ const labLoaded = (labs) =>({
 export const labStartUpdate =(lab)=>{
     return async(dispatch)=>{
         try {
-            console.log(lab)
-            const resp = await fetchConToken(`labs/${lab._id}`, lab, 'PUT')
+            const resp = await fetchConToken(`laboratorios/${lab.id}`, lab, 'PUT')
             const body = await resp.json()
             
             if(body.ok){
                 dispatch(labUpdated(lab))
+                Swal.fire('¡Listo!',
+                'Laboratorio actualizado',
+                'success')
             }else{
                 Swal.fire('Error', body.msg, 'error')
             }
@@ -86,13 +108,17 @@ const labUpdated = ( lab ) => ({
 
 export const labStartDelete=(lab)=>{
     return async(dispatch) => {
-        const _id = lab._id
+        const id = lab.id
+        console.log(id);
         try {
-            const resp = await fetchConToken(`labs/${_id}`, {}, 'DELETE')
+            const resp = await fetchConToken(`laboratorios/${id}`, {}, 'DELETE')
             const body = await resp.json()
             console.log(body)
             if(body.ok){
-                dispatch(labDeleted(_id))
+                dispatch(labDeleted(id))
+                Swal.fire('¡Listo!',
+                'Laboratorio eliminado',
+                'success')
             }else{
                 Swal.fire('Error', body.msg, 'error')
             }

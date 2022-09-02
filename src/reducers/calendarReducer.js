@@ -18,11 +18,12 @@ import { types } from '../types/types';
 const initialState = {
     events: [
         {
+            id: '',
             title: 'Hoola',
             start: moment().toDate(),
             end: moment().add(2, 'hours').toDate(),
             cantidad: '4',
-            idUsuario: '',
+            usuarioId: '',
             idElemento: '',
             observaciones: '',
             fechaPrestamo: moment().toDate(),
@@ -30,7 +31,10 @@ const initialState = {
             user: {
                 _id: '123',
                 name: 'fernando'
-            }
+            },
+            elementos:[
+
+            ]
         }
     ],
     activeEvent: null

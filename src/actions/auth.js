@@ -83,7 +83,7 @@ export const startChecking = () => {
                 name: body.name
             }) )
         } else {
-            dispatch( checkingFinish() );
+            dispatch(checkingFinish());
         }
     }
 }

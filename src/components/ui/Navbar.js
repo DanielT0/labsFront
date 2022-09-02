@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Router, Switch } from 'react-router'
 import { Link } from 'react-router-dom'
 import { startLogout } from '../../actions/auth'
+import "./navbar.css";
+import logo from '../../assets/logo.png';
 
 export const Navbar = () => {
 
@@ -23,27 +25,62 @@ export const Navbar = () => {
             </Route>)
     }
 
+    var nameArr = name.split(" ");
+    var initials = '';
+    var namelen = nameArr.length;
+    initials = nameArr[0][0] + nameArr[namelen - 2][0];
+
+    // for( var i =0; i < nameArr.length; i++){
+    //     initials = initials+ nameArr[i][0];
+    // }
+
     return (
-        <div className="navbar navbar-dark bg-dark mb-4">
-            <span className="navbar-brand">
-                {name}
+        <header>
+            <span className="navbar__logo">
+                <img src={logo} alt="Tag" height="70" />
             </span>
-            <div>
-                <Link to="/laboratorios" className="btn btn-outline-primary">Laboratorios</Link>
+            <ul class="nav__links">
+                <li>
+                    <a><Link to="/laboratorios">Laboratorios</Link></a>
+                </li>
+
+                <li>
+                    <a><Link to="/">Préstamos</Link></a>
+                </li>
+
+                <li>
+                    <a><Link to="/proyectos" >Proyectos</Link></a>
+                </li>
+
+                <li>
+                    <a><Link to="/categorias">Categorias</Link></a>
+                </li>
+
+                <li>
+                    <a><Link to="/grupos-elementos">Referencias</Link></a>
+                </li>
+
+                <li>
+                    <a><Link to="/elementos">Elementos</Link></a>
+                </li>
+            </ul>
+            <div class="profileImage">
+                <div id="profileImage">
+                    {initials}
+                </div>
+                <li class="user-links">
+                    <ul class="user-menu">
+                        <li>
+                            {name}
+                        </li>
+                        <li>
+                            <a class="salir" onClick={handleLogout}> Cerrar sesión </a>
+                        </li>
+                    </ul>
+                </li>
             </div>
 
-            <div>
-                <Link to="/" className="btn btn-outline-primary">Préstamos</Link>
-            </div>
 
-            <button
-                className="btn btn-outline-danger"
-                onClick={handleLogout}
-            >
-                <i className="fas fa-sign-out-atl"></i>
-                <span> Salir</span>
-            </button>
-
-        </div>
+        </header>
     )
 }

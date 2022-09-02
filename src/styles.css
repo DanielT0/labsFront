@@ -1,8 +1,18 @@
+@import url("https://fonts.googleapis.com");
+@import url("https://fonts.gstatic.com");
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Poppins:wght@400;500;600&display=swap");
+@import url("https://unicons.iconscout.com/release/v4.0.0/css/line.css");
+
 html, body{
-    height: 100vh;
+    /* height: 100vh; */
+    height:100%;
     width: 100vw;
 }
 
+*{
+    padding: 0;
+    margin: 0;
+}
 .calendar-screen{
     display: flex;
     flex-flow: column;
@@ -79,3 +89,127 @@ html, body{
     border:0px solid gray !important;
 }
 
+
+
+/* --------- Css ------ */
+
+:root{
+
+    /*========== Colors ==========*/
+    /* Change favorite color */
+    --hue-color: 217; /*Purple 250 - Green 142 - Blue 230 - Pink 340*/
+
+    /* HSL color mode */
+    --first-color: hsl(var(--hue-color), 61%, 29%);
+    --first-color-second: hsl(var(--hue-color), 69%, 61%);
+    --first-color-alt: hsl(var(--hue-color), 57%, 53%);
+    --first-color-lighter: hsl(var(--hue-color), 92%, 85%);
+    --title-color: hsl(var(--hue-color), 8%, 15%);
+    --text-color: hsl(var(--hue-color), 8%, 45%);
+    --text-color-black: hsl(var(--hue-color), 75%, 5%);
+    --text-color-light: hsl(var(--hue-color), 8%, 65%);
+    --input-color: hsl(var(--hue-color), 70%, 96%);
+    --body-color: hsl(var(--hue-color), 60%, 99%);
+    --container-color: #FFF;
+    --scroll-bar-color: hsl(var(--hue-color), 12%, 90%);
+    --almost-transparent-color: hsl(var(--hue-color), 5%,97%);
+    --scroll-thumb-color: hsl(var(--hue-color), 12%, 80%);
+    --background-light-color: hsl(var(--hue-color), 10%, 92%);
+
+    --big-font-size: 2rem;
+    --h1-font-size: 1.5rem;
+    --h2-font-size: 1.25rem;
+    --h3-font-size: 1.125rem;
+    --h4-font-size: 1rem;
+    --normal-font-size: .938rem;
+    --small-font-size: .813rem;
+    --smaller-font-size: .75rem;
+    --side-card-title: .75rem;
+
+    /*========== Margenes Bottom ==========*/
+    /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
+    --mb-0-25: .25rem;
+    --mb-0-5: .5rem;
+    --mb-0-75: .75rem;
+    --mb-1: 1rem;
+    --mb-1-5: 1.5rem;
+    --mb-2: 2rem;
+    --mb-2-5: 2.5rem;
+    --mb-3: 3rem;
+
+    /* ============== Fuentes ================ */
+    --poppins-cursive: 'Nanum Pen Script', cursive;
+    --poppins-serif: 'Poppins', sans-serif;
+}
+
+body{
+    font-size: var(--normal-font-size);
+}
+
+header{
+    display: flex;
+    justify-content: flex-end;
+    vertical-align: center;
+    align-items: center;
+    padding: 5px 3%;
+    background-color: #FFF;
+    border-bottom: 1px solid var(--scroll-bar-color);
+    /* background-color: #003687 */
+}
+
+.navbar__logo{
+    margin-right: auto;
+}
+
+.nav__links{
+    color: var(--first-color);
+    padding-top: 15px;
+    padding-right: 10px;
+    /* background-color: antiquewhite; */
+    /* list-style: none; */
+    /* height: 100%; */
+}
+
+.nav__links li{
+    display: inline-block;
+    color: var(--text-color-light);
+}
+
+.nav__links li a{
+    /* margin: 10px; */
+    padding: 10px 10px;
+    color: var(--text-color);
+    transition: all 0.3s ease 0s;
+    border-radius: 20px;
+}
+
+.nav__links li a:hover{
+    /* margin-bottom: 20px; */
+    color: #003687;
+    text-decoration:none;
+    line-height: 10px;
+    background-color: var(--almost-transparent-color);
+}
+
+.button__icon{
+    font-size: 1.25rem;
+    margin-left: var(--mb-0-5);
+    transition: .3s;
+    color: var(--text-color-light);
+}
+
+/* ======================================== SearchBar ================================= */
+.search-bar{
+    width: 70%;
+    height: 30px;
+    background-color:var(--background-light-color);
+    border-radius: .5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-style: none;
+}
+
+.search-bar:focus{
+    border-style: none;
+    outline: none;
+}

@@ -10,15 +10,13 @@ export const eventStartAddNew = ( event )=>{
             const resp = await fetchConToken('prestamos', event, 'POST');
             const body= await resp.json();
             if(body.ok){
-                event._id = body.prestamo._id
+                event._id = body.prestamo.id
                 event.start= body.prestamo.fechaPrestamo
                 event.end=body.prestamo.fechaDevolucion
-                event.user={
-                    _id: uid,
-                    name: name
-                }
-                console.log(event)
                 dispatch(eventAddNew(event))
+                Swal.fire('¡Listo!',
+                'Préstamo agregado',
+                'success')
             }
         } catch (error) {
             Swal('Error','Llene todas las casillas obligatorias', 'error')
@@ -64,7 +62,8 @@ export const eventClearActiveEvent = () => ({ type: types.eventClearActiveEvent 
 export const eventStartUpdate =(event)=>{
     return async(dispatch)=>{
         try {
-            const resp = await fetchConToken(`prestamos/${event._id}`, event, 'PUT')
+            
+            const resp = await fetchConToken(`prestamos/${event.id}`, event, 'PUT')
             const body = await resp.json()
             event.start= body.prestamo.fechaPrestamo
             event.end=body.prestamo.fechaDevolucion
@@ -88,14 +87,17 @@ const eventUpdated = ( event ) => ({
 export const eventStartDelete=()=>{
     return async(dispatch, getState) => {
 
-        const {_id} = getState().calendar.activeEvent;
+        const {id} = getState().calendar.activeEvent;
 
         try {
-            const resp = await fetchConToken(`prestamos/${_id}`, {}, 'DELETE')
+            const resp = await fetchConToken(`prestamos/${id}`, {}, 'DELETE')
             const body = await resp.json()
             console.log(body)
             if(body.ok){
                 dispatch(eventDeleted())
+                Swal.fire('¡Listo!',
+                'Préstamo eliminado',
+                'success')
             }else{
                 Swal.fire('Error', body.msg, 'error')
             }

@@ -3,10 +3,10 @@ import { types } from '../types/types';
 const initialState = {
     users: [
         {
-            _id: '',
-            idU: '',
-            name: '',
-            email:'',
+            id: '',
+            nombre: '',
+            correo:'',
+            laboratorioId: '',
         }
     ],
     

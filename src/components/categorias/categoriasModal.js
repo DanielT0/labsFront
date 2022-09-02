@@ -10,8 +10,11 @@ import {
 } from "reactstrap";
 import Swal from "sweetalert2";
 import validator from "validator";
-import { labClearActiveLab, labSetActive, labStartAddNew, labStartUpdate } from "../../actions/labs";
+import { categoriaClearActiveCategoria } from "../../actions/categoria";
+// import { labClearActiveLab, labSetActive, labStartAddNew, labStartUpdate } from "../../actions/labs";
+import { categoriaStartUpdate, categoriaClearActiveProy, categoriaStartAddNew } from "../../actions/categoria";
 import { uiCloseModal } from "../../actions/ui";
+
 
 const customStyles = {
     content: {
@@ -24,22 +27,21 @@ const customStyles = {
     }
 };
 
-const initLab = {
+const initCategoria = {
     nombre: '',
-    descripcion: '',
 }
 
 // Modal
 
-export const LabModal = () => {
+export const CategoriaModal = () => {
     const dispatch = useDispatch()
     const { modalOpen } = useSelector(state => state.ui);
-    const [formValues, setFormValues] = useState(initLab)
-    const { nombre, descripcion } = formValues
-    const { activeLab, labId } = useSelector(state => state.lab);
+    const [formValues, setFormValues] = useState(initCategoria);
+    const { nombre } = formValues;
+    const { activeCategoria } = useSelector(state => state.categoria);
 
     const [nombreValido, setNombreValido] = useState(true)
-    const [descripcionValida, setDescripcionValida] = useState(true)
+
 
     const handleInputChange = ({ target }) => {
         setFormValues({
@@ -51,16 +53,20 @@ export const LabModal = () => {
 
     const closeModal = () => {
         // TODO: cerrar el modal
-        dispatch(labClearActiveLab())
+        dispatch(categoriaClearActiveCategoria())
         dispatch(uiCloseModal());
     }
 
+    useEffect(()=>{
+
+    },[])
+
     useEffect(() => {
-        if (activeLab) {
-            setFormValues(activeLab);
+        if (activeCategoria) {
+            setFormValues(activeCategoria);
         }
-        else{
-            setFormValues(initLab);
+        else {
+            setFormValues(initCategoria);
         }
     }, [modalOpen])
 
@@ -70,21 +76,13 @@ export const LabModal = () => {
         if (validator.isEmpty(nombre)) {
             Swal.fire("Error", "No pueden haber campos vacíos, ingrese el nombre", "error")
             setNombreValido(false);
-            setDescripcionValida(true);
             return;
         }
-        if (validator.isEmpty(descripcion)) {
-            Swal.fire("Error", "No pueden haber campos vacíos, ingrese la descripción", "error")
-            setDescripcionValida(false);
-            setNombreValido(true);
-            return;
-        }
-        if (activeLab) {
-            dispatch(labStartUpdate(formValues))
+        if (activeCategoria) {
+            dispatch(categoriaStartUpdate(formValues))
         } else {
-            dispatch(labStartAddNew(formValues))
+            dispatch(categoriaStartAddNew(formValues))
         }
-        setDescripcionValida(true);
         setNombreValido(true)
         closeModal()
     }
@@ -99,7 +97,7 @@ export const LabModal = () => {
         >
 
             <ModalHeader>
-                <div><h3>{(activeLab) ? 'Editar laboratorio' : 'Nuevo laboratorio'} </h3></div>
+                <div><h3>{(activeCategoria) ? 'Editar categoría' : 'Nueva categoría'} </h3></div>
             </ModalHeader>
 
             <ModalBody>
@@ -114,19 +112,6 @@ export const LabModal = () => {
                         name="nombre"
                         type="text"
                         value={nombre}
-                        onChange={handleInputChange}
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    <label>
-                        Descripcion:
-                    </label>
-                    <input
-                        className={`form-control ${!descripcionValida && 'is-invalid'}`}
-                        name="descripcion"
-                        type="text"
-                        value={descripcion}
                         onChange={handleInputChange}
                     />
                 </FormGroup>

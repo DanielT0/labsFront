@@ -12,6 +12,7 @@ export const AddNewFab = () => {
 
 
     return (
+        
         <button
             className="btn btn-primary fab"
             onClick={ handleClickNew }
